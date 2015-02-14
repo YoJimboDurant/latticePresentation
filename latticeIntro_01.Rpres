@@ -1,0 +1,60 @@
+Introduction to Lattice
+========================================================
+author: James Durant
+date: 03/28/2015
+
+Why lattice?
+========================================================
+
+Lattice uses trellis graphics like *ggplot2* but interface is different
+- uses functions with formula calls
+- graphical parameters, legends, scales, functions performed on conditioned data are controlled through lists passed to the function
+- default appearance can be set ahead of time, and changed
+- returns object which can be manipulated, combined or otherwise changed as needed
+
+Basic lattice example
+========================================================
+There are 2 packages generally used:
+```{r}
+library(lattice)
+library(latticeExtra)
+```
+
+Slide With Plot
+========================================================
+
+```{r, fig.align='center'}
+carPlot <- xyplot(dist ~ speed, data=cars)
+plot(carPlot)
+```
+
+What Controls this Plot
+========================================================
+There is a function to show how the graphics will default display in lattice:
+
+```{r, fig.align='center'}
+show.settings()
+```
+
+
+Finding and Changing trellis.par
+========================================================
+```{r, fig.align='center'}
+newTheme <- oldTheme <-trellis.par.get()
+newTheme[grep("pch", newTheme)]
+```
+
+Finding and Changing trellis.par
+========================================================
+```{r, fig.align='center'}
+newTheme$plot.symbol$pch <- 20
+newTheme$plot.symbol$col <- "#000000"
+trellis.par.set(newTheme)
+show.settings()
+```
+
+Finding and Changing trellis.par
+========================================================
+```{r, fig.align='center'}
+plot(carPlot)
+```
