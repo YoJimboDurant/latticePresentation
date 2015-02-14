@@ -25,6 +25,7 @@ Slide With Plot
 
 ```{r, fig.align='center'}
 carPlot <- xyplot(dist ~ speed, data=cars)
+class(carPlot)
 plot(carPlot)
 ```
 
@@ -41,20 +42,43 @@ Finding and Changing trellis.par
 ========================================================
 ```{r, fig.align='center'}
 newTheme <- oldTheme <-trellis.par.get()
-newTheme[grep("pch", newTheme)]
+grep("plot[.]symbol", names(newTheme))
+```
+The 15th parameter controls the plot.symbol appearance
+```{r, fig.align='center'}
+names(newTheme$plot.symbol)
+names(newTheme$plot.line)
 ```
 
+Find all parameters that control color of polygon:
+
+```{r}
+lapply(newTheme[grep("polygon", names(newTheme))], function(lx) grep("col", names(lx)))
+```
+
 Finding and Changing trellis.par
 ========================================================
+Change some default paramters:
+
 ```{r, fig.align='center'}
 newTheme$plot.symbol$pch <- 20
 newTheme$plot.symbol$col <- "#000000"
+newTheme$plot.line$col <- "red"
 trellis.par.set(newTheme)
 show.settings()
 ```
+trellis.par.set changes the default behavior of the lattice graphics.
 
-Finding and Changing trellis.par
+Finding and Changing trellis.par example
 ========================================================
+Now when we call xyplot, it will use black circles and a red line:
 ```{r, fig.align='center'}
 plot(carPlot)
+```
+
+Finding and Changing trellis.par example
+========================================================
+But if I wanted to go back:
+```{r, fig.align='center'}
+update(carPlot, par.settings=oldTheme)
 ```
