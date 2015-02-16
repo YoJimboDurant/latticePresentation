@@ -1,5 +1,6 @@
 Introduction to Lattice
 ========================================================
+class:title-slide
 author: James Durant
 date: 03/28/2015
 
@@ -14,7 +15,9 @@ Lattice uses trellis graphics like *ggplot2* but interface is different
 
 Basic lattice example
 ========================================================
+class:small-code
 There are 2 packages generally used:
+
 ```{r}
 library(lattice)
 library(latticeExtra)
@@ -22,7 +25,7 @@ library(latticeExtra)
 
 Slide With Plot
 ========================================================
-
+class:small-code
 ```{r, fig.align='center'}
 carPlot <- xyplot(dist ~ speed, data=cars)
 class(carPlot)
@@ -31,6 +34,7 @@ plot(carPlot)
 
 What Controls this Plot
 ========================================================
+class:small-code
 There is a function to show how the graphics will default display in lattice:
 
 ```{r, fig.align='center'}
@@ -40,26 +44,43 @@ show.settings()
 
 Finding and Changing trellis.par
 ========================================================
-```{r, fig.align='center'}
+class:small-code
+Use trellis.par.get() to get the current theme, and pass it into 2 objects - oldTheme and newTheme. We will edit newTheme and save oldTheme for latter.
+```{r}
 newTheme <- oldTheme <-trellis.par.get()
-grep("plot[.]symbol", names(newTheme))
-```
-The 15th parameter controls the plot.symbol appearance
-```{r, fig.align='center'}
-names(newTheme$plot.symbol)
-names(newTheme$plot.line)
+grep("symbol", names(newTheme), value=TRUE)
+data.frame(trellis.par.get("plot.symbol"))
 ```
 
-Find all parameters that control color of polygon:
+
+Finding and Changing trellis.par
+========================================================
+class:small-code
+```{r}
+data.frame(newTheme$plot.symbol) # data.frame is optional - just makes things fit in slide
+```
+There are 6 properties that control the appearance of plot symbol:
+- alpha is transparency [0-1]
+- cex is size
+- col is color
+- font is font set
+- pch is symbol
+- fill is color fill
+
+
+Finding and Changing trellis.par
+========================================================
+class:small-code
+You can also use grep to find all parameters that control color of polygon:
 
 ```{r}
-lapply(newTheme[grep("polygon", names(newTheme))], function(lx) grep("col", names(lx)))
+lapply(newTheme[grep("polygon", names(newTheme))], names)
 ```
 
 Finding and Changing trellis.par
 ========================================================
+class:small-code
 Change some default paramters:
-
 ```{r, fig.align='center'}
 newTheme$plot.symbol$pch <- 20
 newTheme$plot.symbol$col <- "#000000"
@@ -71,6 +92,7 @@ trellis.par.set changes the default behavior of the lattice graphics.
 
 Finding and Changing trellis.par example
 ========================================================
+class:small-code
 Now when we call xyplot, it will use black circles and a red line:
 ```{r, fig.align='center'}
 plot(carPlot)
@@ -78,7 +100,15 @@ plot(carPlot)
 
 Finding and Changing trellis.par example
 ========================================================
-But if I wanted to go back:
+class:small-code
+But if I wanted to go back (for this plot):
 ```{r, fig.align='center'}
 update(carPlot, par.settings=oldTheme)
 ```
+
+Key thoughts for lattice
+========================================================
+-appearence is controled by a list of parameters
+-default is obtained by trellis.par.get and/or show.settings()
+-can be manipulated and set with trellis.par.set()
+-set for an individual lattice plot with the par.setting argument.

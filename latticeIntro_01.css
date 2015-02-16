@@ -24,8 +24,20 @@
   word-wrap: normal;
   -moz-hyphens: none;
 }
-  .title-slide {
-     background-image: url(ATSDR_DIVISION.png);
-   }
+.title-slide {
+ background-image: url(ATSDR_DIVISION.png);
+ background-position: center center;
+ background-attachment: fixed;
+ background-size: contain;
+}
+
+body {
+  background-image: url(CDCLightBlue.png);
+  background-position: center center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+   
    
 </style>
