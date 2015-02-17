@@ -26,8 +26,8 @@ library(latticeExtra)
 Slide With Plot
 ========================================================
 class:small-code
-```{r, fig.align='center'}
-carPlot <- xyplot(dist ~ speed, data=cars)
+```{r}
+carPlot <- xyplot(dist ~ speed, data=cars, type=c("p","r","g"), xlab="Speed (mph)", ylab="Stopping Distance (ft)")
 class(carPlot)
 plot(carPlot)
 ```
@@ -106,9 +106,37 @@ But if I wanted to go back (for this plot):
 update(carPlot, par.settings=oldTheme)
 ```
 
-Key thoughts for lattice
+Key thoughts for controling appearence in lattice
 ========================================================
--appearence is controled by a list of parameters
--default is obtained by trellis.par.get and/or show.settings()
--can be manipulated and set with trellis.par.set()
--set for an individual lattice plot with the par.setting argument.
+- appearence is 'theme' controled by a list of parameters
+- current settings obtained by trellis.par.get and/or show.settings()
+- can be manipulated and set with trellis.par.set()
+- set for an individual lattice plot with the par.setting argument.
+
+What does this do for you?
+========================================================
+class:small-code
+Themes can be pre-defined:
+```{r, fig.align='center'}
+update(carPlot, par.settings=ggplot2like())
+```
+
+What does this do for you?
+========================================================
+class:small-code
+Or even for a publication:
+```{r, fig.align='center'}
+update(carPlot, par.settings=theEconomist.theme(with.bg=TRUE), type=c("p","r"))
+```
+
+What does this do for you?
+========================================================
+class:small-code
+Or even for a publication:
+```{r, fig.align='center'}
+bwtheme <- standard.theme("pdf", color=FALSE)
+bwtheme$plot.symbol$pch <- 20
+update(carPlot, par.settings = bwtheme)
+```
+
+
