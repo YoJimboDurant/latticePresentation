@@ -23,16 +23,28 @@ library(lattice)
 library(latticeExtra)
 ```
 
-Slide With Plot
+Example Plot
 ========================================================
 class:small-code
-```{r}
+```{r, fig.align='center'}
 carPlot <- xyplot(dist ~ speed, data=cars, type=c("p","r","g"), xlab="Speed (mph)", ylab="Stopping Distance (ft)")
 class(carPlot)
 plot(carPlot)
 ```
 
-What Controls this Plot
+
+Arguments of xyplot
+========================================================
+class:small 
+* <span style="color:red">`dist ~ speed`</span> is formula relating distance as a function of speed. 
+* <span style="color:red">`data = cars`</span>  is the data.frame we are analyzing (built in dataset see `?cars`)
+* <span style="color:red">`type = c("p","r", "g")`</span> is an argument passed to the `panel.xyplot` function which does the following:
+  + `"p"` adds `panel.points` function
+  + `"r"` adds `panel.lmline` function
+  + `"g"` adds `panel.grid` to function
+* <span style="color:red">`xlab`</span> and <span style="color:red">`ylab`</span> are the same as `plot` 
+
+So What Controls a Lattice Plot?
 ========================================================
 class:small-code
 There is a function to show how the graphics will default display in lattice:

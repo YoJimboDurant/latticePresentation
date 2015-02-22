@@ -16,6 +16,10 @@
   font-size: 1em;
 }
 
+.small {
+  font-size: 1em;
+}
+
 .reveal h3 {
   word-wrap: normal;
   -moz-hyphens: none;
