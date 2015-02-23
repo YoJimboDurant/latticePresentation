@@ -15,6 +15,13 @@ Lattice uses trellis graphics like *ggplot2* but interface is different
 
 Basic lattice example
 ========================================================
+What we will be covering today
+- basic ways to create lattice plots
+- how to modify appearence of lattice plot objects using themes
+- 2 examples of highly customized plots in lattice
+
+Basic lattice example
+========================================================
 class:small-code
 There are 2 packages generally used:
 
@@ -31,7 +38,7 @@ carPlot <- xyplot(dist ~ speed, data=cars, type=c("p","r","g"), xlab="Speed (mph
 class(carPlot)
 plot(carPlot)
 ```
-
+Note the class of carPlot is *trellis* we will talk about modifying how trellis objects are displayed later.
 
 Arguments of xyplot
 ========================================================
@@ -43,6 +50,15 @@ class:small
   + `"r"` adds `panel.lmline` function
   + `"g"` adds `panel.grid` to function
 * <span style="color:red">`xlab`</span> and <span style="color:red">`ylab`</span> are the same as `plot` 
+
+Types of lattice plots - The Univariates
+========================================================
+
+```{r, results="asis",echo=FALSE}
+library(xtable)
+table1 <- read.csv("./Book1.csv")
+print(xtable(table1), type="html", include.rownames=FALSE)
+```
 
 So What Controls a Lattice Plot?
 ========================================================
@@ -57,7 +73,8 @@ show.settings()
 Finding and Changing trellis.par
 ========================================================
 class:small-code
-Use trellis.par.get() to get the current theme, and pass it into 2 objects - oldTheme and newTheme. We will edit newTheme and save oldTheme for latter.
+- Use trellis.par.get() to get the current theme, and pass it into 2 objects - oldTheme and newTheme. 
+- We will edit newTheme and save oldTheme for latter.
 ```{r}
 newTheme <- oldTheme <-trellis.par.get()
 grep("symbol", names(newTheme), value=TRUE)
@@ -120,7 +137,7 @@ update(carPlot, par.settings=oldTheme)
 
 Key thoughts for controling appearence in lattice
 ========================================================
-- appearence is 'theme' controled by a list of parameters
+- appearence is a 'theme' controled by a list of parameters
 - current settings obtained by trellis.par.get and/or show.settings()
 - can be manipulated and set with trellis.par.set()
 - set for an individual lattice plot with the par.setting argument.
@@ -151,4 +168,46 @@ bwtheme$plot.symbol$pch <- 20
 update(carPlot, par.settings = bwtheme)
 ```
 
+
+Example 2: Customized panel function
+========================================================
+class:small-code
+We use the attributes of a lattice xyplot to help create a arrows using panel.arrows:
+[code](./testXYPLOT.R)
+```{r, echo=FALSE, fig.align='center'}
+require(latticeExtra)
+require(openair)
+library(circular)
+
+Sys.setenv(TZ='GMT')
+
+testData <- selectByDate(mydata, start="1/7/1999", end="2/7/1999")
+
+plt <- xyplot(pm10~date, data=testData, type="g", xlab="Date", ylab=quickText("pm10 (ug.m-3)"))
+
+deltaX <- as.numeric(plt$x.limits[[2]]) - as.numeric(plt$x.limits[[1]])
+deltaY <- as.numeric(plt$y.limits[[2]]) - as.numeric(plt$y.limits[[1]])
+
+pltRatio <- plt$aspect.ratio
+ratio <- deltaY/deltaX
+factor = 3600
+length = 0.05
+
+#scale wind speed
+scaleWS <- testData$ws/max(testData$ws, na.rm=TRUE)
+
+testData$u <- sin(rad(testData$wd))  * factor * scaleWS
+testData$v <- cos(rad(testData$wd)) *  factor * ratio/pltRatio * scaleWS
+
+plt2 <- xyplot(pm10~date, data=testData, x0=testData$date + testData$u ,y0=testData$pm10 + testData$v, x1 = testData$date - testData$u,
+               y1= testData$pm10 - testData$v, length=length, labels=testData$wd,
+               panel=function(...) {
+                 panel.arrows(...)
+                 panel.grid(...)
+                 #panel.text(...)
+                 },
+               xlab="Date", ylab=quickText("PM10 (ug.m-3)"),
+               main=quickText("Winds by Date and PM10")
+               )
+plt2
 

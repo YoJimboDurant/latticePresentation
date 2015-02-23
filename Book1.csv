@@ -1,0 +1,7 @@
+Function,Purpose,Example
+"histogram (~y)",histograms,"histogram(~mpg, data=mtcars)"
+densityplot(~y),"density plots","densityplot(~mpg, data=mtcars)"
+qqmath(),"quantile-quantile plots","qqmath(~mpg, data=mtcars)"
+bwplot(y~x),"box and whisker plots","bwplot(~mpg, data=mtcars); bwplot(mpg ~ factor(cyl), data=mtcars)"
+barchart(y~x),barchart,
+dotplot(y~x),"Dotplot per Cleveland",
