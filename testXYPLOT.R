@@ -30,7 +30,8 @@ plt2 <- xyplot(pm10~date, data=testData, x0=testData$date + testData$u ,y0=testD
                  #panel.text(...)
                  },
                xlab="Date", ylab=quickText("PM10 (ug.m-3)"),
-               main=quickText("Winds by Date and PM10")
+               main=quickText("Winds by Date and PM10"),
+               scales=list(x=list(format="%d-%b / %H:%M"))
                )
 plt2
 
