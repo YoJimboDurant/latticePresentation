@@ -12,13 +12,14 @@ Lattice uses trellis graphics like *ggplot2* but interface is different
 - graphical parameters, legends, scales, functions performed on conditioned data are controlled through lists passed to the function
 - default appearance can be set ahead of time, and changed
 - returns object which can be manipulated, combined or otherwise changed as needed
+- speed, flexibility, and age of package makes it possible that you will encounter a package that uses it.
 
 Basic lattice example
 ========================================================
 What we will be covering today
 - basic ways to create lattice plots
 - how to modify appearence of lattice plot objects using themes
-- 2 examples of highly customized plots in lattice
+- 2 examples of customized plots in lattice
 
 Basic lattice example
 ========================================================
@@ -29,7 +30,7 @@ There are 2 packages generally used:
 library(lattice)
 library(latticeExtra)
 ```
-
+Both provide functions that perform graphing, although the 'Extra' script works more with plot manipulation.
 Example Plot
 ========================================================
 class:small-code
@@ -60,7 +61,31 @@ table1 <- read.csv("./Book1.csv")
 print(xtable(table1), type="html", include.rownames=FALSE)
 ```
 
-So What Controls a Lattice Plot?
+
+Types of lattice plots - the multivariates
+========================================================
+```{r, results="asis",echo=FALSE}
+# table2 <- read.csv("./Book2.csv")
+# print(xtable(table1), type="html", include.rownames=FALSE)
+```
+
+Types of lattice plots - and more and more
+========================================================
+Examples from lattice book are available online:
+
+http://lmdvr.r-forge.r-project.org/figures/figures.html
+
+Basics of a lattice plot call
+========================================================
+- a formula
+- a panel function (can be left at default or changed)
+- scales (as list)
+- key (as list) produce legend or key
+- par.settings (as list) control appearence settings.
+
+
+
+So What Controls Appearence in Lattice Plots?
 ========================================================
 class:small-code
 There is a function to show how the graphics will default display in lattice:
