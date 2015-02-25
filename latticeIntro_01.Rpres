@@ -4,6 +4,7 @@ class:title-slide
 author: James Durant
 date: 03/28/2015
 
+    
 Why lattice?
 ========================================================
 
@@ -34,12 +35,13 @@ Both provide functions that perform graphing, although the 'Extra' script works 
 Example Plot
 ========================================================
 class:small-code
-```{r, fig.align='center'}
+```{r, fig.align='left', fig.width=8, fig.height=4}
 carPlot <- xyplot(dist ~ speed, data=cars, type=c("p","r","g"), xlab="Speed (mph)", ylab="Stopping Distance (ft)")
 class(carPlot)
 plot(carPlot)
 ```
-Note the class of carPlot is *trellis* we will talk about modifying how trellis objects are displayed later.
+***
+Note the class of carPlot is *trellis* -  we will talk about modifying how trellis objects are displayed later.
 
 Arguments of xyplot
 ========================================================
@@ -52,38 +54,38 @@ class:small
   + `"g"` adds `panel.grid` to function
 * <span style="color:red">`xlab`</span> and <span style="color:red">`ylab`</span> are the same as `plot` 
 
-Types of lattice plots - The Univariates
-========================================================
-
-```{r, results="asis",echo=FALSE}
-library(xtable)
-table1 <- read.csv("./Book1.csv")
-print(xtable(table1), type="html", include.rownames=FALSE)
-```
-
-
-Types of lattice plots - the multivariates
-========================================================
-```{r, results="asis",echo=FALSE}
-# table2 <- read.csv("./Book2.csv")
-# print(xtable(table1), type="html", include.rownames=FALSE)
-```
-
 Types of lattice plots - and more and more
 ========================================================
+class:small 
 Examples from lattice book are available online:
 
 http://lmdvr.r-forge.r-project.org/figures/figures.html
 
 Basics of a lattice plot call
 ========================================================
+class:small 
 - a formula
 - a panel function (can be left at default or changed)
 - scales (as list)
 - key (as list) produce legend or key
-- par.settings (as list) control appearence settings.
+- par.settings (as list) control appearence settings
+- Extra arguments
 
+Basics of a lattice plot call - formula
+========================================================
+class:small-code
+Compare across (|) score
+```{r, fig.align='center', fig.width=10, fig.height=6}
+xyplot(mpg~ hp | factor(cyl), data = mtcars, layout=c(3,1))
+```
 
+Basics of a lattice plot call - formula
+========================================================
+class:small-code
+Compare across (|) score
+```{r, fig.align='center', fig.width=10, fig.height=6}
+xyplot(mpg~ hp| factor(cyl), group= factor(gear), data = mtcars, layout=c(3,1), auto.key=TRUE)
+```
 
 So What Controls Appearence in Lattice Plots?
 ========================================================
