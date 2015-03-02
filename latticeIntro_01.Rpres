@@ -61,6 +61,11 @@ Examples from lattice book are available online:
 
 http://lmdvr.r-forge.r-project.org/figures/figures.html
 
+
+Types of lattice plots - and more and more
+========================================================
+<iframe width='100%' height='700' src='http://www.r-fiddle.org/#/embed?id=e63tlTG8' allowfullscreen='allowfullscreen' frameborder='0'></iframe>
+                     
 Basics of a lattice plot call
 ========================================================
 class:small 
@@ -86,7 +91,7 @@ Compare across (|) score
 ```{r, fig.align='center', fig.width=10, fig.height=6}
 xyplot(mpg~ hp| factor(cyl), group= factor(gear), data = mtcars, layout=c(3,1), auto.key=TRUE)
 ```
-
+  
 So What Controls Appearence in Lattice Plots?
 ========================================================
 class:small-code
