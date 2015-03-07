@@ -1,7 +1,11 @@
-Function,Purpose,"Simple Example"
-"histogram (~y)",histograms,"histogram(~mpg, data=mtcars)"
-densityplot(~y),"density plots","densityplot(~mpg, data=mtcars)"
-qqmath(),"quantile-quantile plots","qqmath(~mpg, data=mtcars)"
-bwplot(y~x),"box and whisker plots","bwplot(~mpg, data=mtcars); bwplot(mpg ~ factor(cyl), data=mtcars)"
-barchart(y~x),barchart,"barchart(tapply(mtcars$mpg, mean, INDEX=mtcars$cyl))"
-dotplot(y~x),"Dotplot per Cleveland","dotplot(mpg~factor(cyl), data=mtcars)"
+Function,Purpose
+"histogram (~y)",histograms
+densityplot(~y),"density plots"
+qqmath(),"quantile-quantile plots"
+bwplot(y~x),"box and whisker plots"
+barchart(y~x),barchart
+dotplot(y~x),"Dotplot per Cleveland"
+xyplot(y~x),"scatter plots"
+levelplot(z~x*y)," level plot"
+cloud(z~x*y),"3d scatter plot"
+contourplotz~x*y),"contour plots"

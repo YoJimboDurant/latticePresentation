@@ -1,26 +1,82 @@
+<style>
+.reveal h1, .reveal h2, .reveal h3 {
+word-wrap: normal;
+-moz-hyphens: none;
+}
+.small-code pre code {
+font-size: 1em;
+}
+.midcenter {
+position: fixed;
+top: 50%;
+left: 50%;
+}
+.footer {
+color: black; background: #E8E8E8;
+position: fixed; top: 90%;
+text-align:center; width:100%;
+}
+.pinky .reveal .state-background {
+background: #FF69B4;
+}
+.pinky .reveal h1,
+.pinky .reveal h2,
+.pinky .reveal p {
+color: black;
+}
+
+body {
+  background-image: url(CDCLightBlue.png);
+  background-position: center center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+ 
+}
+
+</style>
+
 Introduction to Lattice
 ========================================================
-class:title-slide
-author: James Durant
-date: 03/28/2015
+autosize: false
+transition: rotate
+transition-speed: slow
+James Durant, MSPH CIH<br>
+ATSDR DCHI SSB Exposure Investigations and Data Analysis Team<br>
+![](bok.png)
+<div class="footer" style="margin-top:-50px;background-color:transparent;"
+<SPAN STYLE="font-size:80%;font-weight:bold;"><a href="http://www.meetup.com/r-enthusiasts/">CDC ATSDR R USERS GROUP</a><br>March 28, 2015</SPAN></div>
 
-    
-Why lattice?
+
+
+
+
+
+Why learn lattice?
 ========================================================
-
-Lattice uses trellis graphics like *ggplot2* but interface is different
-- uses functions with formula calls
-- graphical parameters, legends, scales, functions performed on conditioned data are controlled through lists passed to the function
+- older than *ggplot2* so many packages have used it
+- can do some things that are difficult in *ggplot2* (e.g. 3d)
 - default appearance can be set ahead of time, and changed
 - returns object which can be manipulated, combined or otherwise changed as needed
-- speed, flexibility, and age of package makes it possible that you will encounter a package that uses it.
+- available in base R 
 
-Basic lattice example
-========================================================
 What we will be covering today
+========================================================
 - basic ways to create lattice plots
 - how to modify appearence of lattice plot objects using themes
 - 2 examples of customized plots in lattice
+
+Lattice consists of:
+========================================================
+- high level functions (similar in general to R graphics)
+- functions that are called from within high level functions
+  + panel functions 
+  + page functions
+  + key functions
+- a list of lists parameters that control appearance of plots
+  + par.settings - can be set up by user external to function or changed by graphic
+  + scales - control appearence of scales
+
 
 Basic lattice example
 ========================================================
@@ -31,7 +87,9 @@ There are 2 packages generally used:
 library(lattice)
 library(latticeExtra)
 ```
-Both provide functions that perform graphing, although the 'Extra' script works more with plot manipulation.
+Both provide functions that perform graphing, although the 'Extra' package works more with plot manipulation. 
+ - Default _high level_ lattice functions at first will appear to work like traditional graphics calls.
+ 
 Example Plot
 ========================================================
 class:small-code
@@ -54,17 +112,21 @@ class:small
   + `"g"` adds `panel.grid` to function
 * <span style="color:red">`xlab`</span> and <span style="color:red">`ylab`</span> are the same as `plot` 
 
+Examples of High Level Lattice Functions
+========================================================
+
+```{r, echo=FALSE, results='asis'}
+library(xtable)
+table1 <- read.csv("Book1.csv")
+print(xtable(table1), type="html", include.rownames=FALSE, html.table.attributes ="border=0")
+```
+<br><div class="footer" style="background-color:transparent;"
+<SPAN STYLE="font-size:20%;font-weight:bold;">Examples <br><a href="http://lmdvr.r-forge.r-project.org/figures/figures.html">lmdvr.r-forge.r-project.org/figures/figures.html</a></SPAN></div>
+
+
 Types of lattice plots - and more and more
 ========================================================
-class:small 
-Examples from lattice book are available online:
-
-http://lmdvr.r-forge.r-project.org/figures/figures.html
-
-
-Types of lattice plots - and more and more
-========================================================
-<iframe width='100%' height='700' src='http://www.r-fiddle.org/#/embed?id=e63tlTG8' allowfullscreen='allowfullscreen' frameborder='0'></iframe>
+<iframe width='100%' height='600' src='http://www.r-fiddle.org/#/embed?id=e63tlTG8' allowfullscreen='allowfullscreen' frameborder='0'></iframe>
                      
 Basics of a lattice plot call
 ========================================================
@@ -74,30 +136,81 @@ class:small
 - scales (as list)
 - key (as list) produce legend or key
 - par.settings (as list) control appearence settings
-- Extra arguments
+- Additional arguments or functions
 
-Basics of a lattice plot call - formula
+Basics of a lattice plot call - conditioning
 ========================================================
 class:small-code
-Compare across (|) score
+Compare across (|) as factor
 ```{r, fig.align='center', fig.width=10, fig.height=6}
 xyplot(mpg~ hp | factor(cyl), data = mtcars, layout=c(3,1))
 ```
 
-Basics of a lattice plot call - formula
+Basics of a lattice plot call - conditioning
 ========================================================
 class:small-code
-Compare across (|) score
+Compare across (|) numeric
 ```{r, fig.align='center', fig.width=10, fig.height=6}
-xyplot(mpg~ hp| factor(cyl), group= factor(gear), data = mtcars, layout=c(3,1), auto.key=TRUE)
+data(airquality)
+airquality$Temp <- equal.count(airquality$Temp)
+xyplot(Ozone~Solar.R|Temp, data=airquality)
 ```
-  
+
+
+Basics of a lattice plot call - interactions
+========================================================
+class:small-code
+Compare across (|) with interaction
+```{r, fig.align='center', fig.width=10, fig.height=6}
+xyplot(mpg~ hp | factor(cyl)+factor(gear), data = mtcars)
+```
+
+
+Basics of a lattice plot call - interactions (plus key)
+========================================================
+class:small-code
+Compare across (|) with grouping variable
+```{r, fig.align='center', fig.width=10, fig.height=6}
+xyplot(mpg~ hp | factor(cyl), group=factor(gear), data = mtcars, auto.key=list(space="right", title="Gears"))
+```
+
+
+Basics of a lattice plot call - scales
+========================================================
+class:small-code
+We can control the scales with a list.
+```{r, fig.align='center', fig.width=10, fig.height=6}
+xyplot(mpg~ hp | factor(cyl), group=factor(gear), data = mtcars, auto.key=list(space="right", title="Gears"), scales=list(alternating=FALSE))
+```
+
+Basics of a lattice plot call - page function
+========================================================
+class:small-code
+We can annotate our plot using the page argument with a function.
+```{r, fig.align='center', fig.width=10, fig.height=6, results='hide'}
+notation.plot <- xyplot(mpg~ hp | factor(cyl), group=factor(gear), data = mtcars, 
+       auto.key=list(space="right", title="Gears"), 
+       scales=list(alternating=FALSE),
+       page=function(n){
+         grid:::grid.text("Data Source: Henderson and Velleman (1981), Building multiple regression models interactively. Biometrics, 37, 391–411", x=0.40, y=0.01, default.units="npc", just=c("left","bottom"), gp=grid:::gpar(fontsize=8))
+       })
+```
+
+Basics of a lattice plot call - page function
+========================================================
+class:small-code
+The grid.text is now plugged perminently into the object
+```{r, fig.align='center', fig.width=10, fig.height=6}
+plot(notation.plot)
+```
+
+
 So What Controls Appearence in Lattice Plots?
 ========================================================
 class:small-code
 There is a function to show how the graphics will default display in lattice:
 
-```{r, fig.align='center'}
+```{r, fig.align='center', fig.width=10, fig.height=6}
 show.settings()
 ```
 
