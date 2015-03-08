@@ -45,7 +45,7 @@ James Durant, MSPH CIH<br>
 ATSDR DCHI SSB Exposure Investigations and Data Analysis Team<br>
 ![](bok.png)
 <div class="footer" style="margin-top:-50px;background-color:transparent;"
-<SPAN STYLE="font-size:80%;font-weight:bold;"><a href="http://www.meetup.com/r-enthusiasts/">CDC ATSDR R USERS GROUP</a><br>March 28, 2015</SPAN></div>
+<SPAN STYLE="font-size:80%;font-weight:bold;">CDC ATSDR R USERS GROUP<br>March 28, 2015</SPAN></div>
 
 
 
@@ -54,8 +54,8 @@ ATSDR DCHI SSB Exposure Investigations and Data Analysis Team<br>
 
 Why learn lattice?
 ========================================================
-- older than *ggplot2* so many packages have used it
-- can do some things that are difficult in *ggplot2* (e.g. 3d)
+- older than *ggplot2* - many packages have used it
+- can do some things that are difficult in *ggplot2* (e.g. 3d scatter plots)
 - default appearance can be set ahead of time, and changed
 - returns object which can be manipulated, combined or otherwise changed as needed
 - available in base R 
@@ -63,7 +63,7 @@ Why learn lattice?
 What we will be covering today
 ========================================================
 - basic ways to create lattice plots
-- how to modify appearence of lattice plot objects using themes
+- how to modify appearance of lattice plot objects using themes
 - 2 examples of customized plots in lattice
 
 Lattice consists of:
@@ -75,7 +75,7 @@ Lattice consists of:
   + key functions
 - a list of lists parameters that control appearance of plots
   + par.settings - can be set up by user external to function or changed by graphic
-  + scales - control appearence of scales
+  + scales - control appearance of scales
 
 
 Basic lattice example
@@ -112,6 +112,30 @@ class:small
   + `"g"` adds `panel.grid` to function
 * <span style="color:red">`xlab`</span> and <span style="color:red">`ylab`</span> are the same as `plot` 
 
+Panel Functions -speckled boxplots
+========================================================
+class:small-code
+```{r, fig.align='left', fig.width=8, fig.height=4}
+carPlot.bwplot <- bwplot(mpg ~ factor(cyl), data=mtcars, 
+                         panel=function(...){
+                           panel.xyplot(...,jitter.x=TRUE, factor=0.5, col="red", cex=0.8, pch=19)
+                           panel.bwplot(...)
+                           panel.grid(...)
+                         }
+                         , 
+                         xlab="Cylinders", 
+                         ylab="Miles per Gallon (mpg)")
+```
+
+
+Panel Functions -speckled boxplots
+========================================================
+class:small-code
+```{r, fig.align='left', fig.width=10, fig.height=6}
+plot(carPlot.bwplot)
+```
+
+
 Examples of High Level Lattice Functions
 ========================================================
 
@@ -124,9 +148,6 @@ print(xtable(table1), type="html", include.rownames=FALSE, html.table.attributes
 <SPAN STYLE="font-size:20%;font-weight:bold;">Examples <br><a href="http://lmdvr.r-forge.r-project.org/figures/figures.html">lmdvr.r-forge.r-project.org/figures/figures.html</a></SPAN></div>
 
 
-Types of lattice plots - and more and more
-========================================================
-<iframe width='100%' height='600' src='http://www.r-fiddle.org/#/embed?id=e63tlTG8' allowfullscreen='allowfullscreen' frameborder='0'></iframe>
                      
 Basics of a lattice plot call
 ========================================================
@@ -135,7 +156,8 @@ class:small
 - a panel function (can be left at default or changed)
 - scales (as list)
 - key (as list) produce legend or key
-- par.settings (as list) control appearence settings
+- par.settings (as list) control appearance settings
+- par.strip.text (as list) text inside shingle
 - Additional arguments or functions
 
 Basics of a lattice plot call - conditioning
@@ -187,9 +209,9 @@ Basics of a lattice plot call - page function
 ========================================================
 class:small-code
 We can annotate our plot using the page argument with a function.
-```{r, fig.align='center', fig.width=10, fig.height=6, results='hide'}
+```{r, fig.align='center', fig.width=10, fig.height=6}
 notation.plot <- xyplot(mpg~ hp | factor(cyl), group=factor(gear), data = mtcars, 
-       auto.key=list(space="right", title="Gears"), 
+       auto.key=list(space="right", title="Gears", border=TRUE, between.columns=4, cex.title=0.8), 
        scales=list(alternating=FALSE),
        page=function(n){
          grid:::grid.text("Data Source: Henderson and Velleman (1981), Building multiple regression models interactively. Biometrics, 37, 391–411", x=0.40, y=0.01, default.units="npc", just=c("left","bottom"), gp=grid:::gpar(fontsize=8))
@@ -199,13 +221,13 @@ notation.plot <- xyplot(mpg~ hp | factor(cyl), group=factor(gear), data = mtcars
 Basics of a lattice plot call - page function
 ========================================================
 class:small-code
-The grid.text is now plugged perminently into the object
+The grid.text is now plugged permanently into the object
 ```{r, fig.align='center', fig.width=10, fig.height=6}
 plot(notation.plot)
 ```
 
 
-So What Controls Appearence in Lattice Plots?
+So What Controls Appearance in Lattice Plots?
 ========================================================
 class:small-code
 There is a function to show how the graphics will default display in lattice:
@@ -227,7 +249,7 @@ data.frame(trellis.par.get("plot.symbol"))
 ```
 
 
-Finding and Changing trellis.par
+Finding and Changing trellis.par - plot symbols
 ========================================================
 class:small-code
 ```{r}
@@ -242,7 +264,7 @@ There are 6 properties that control the appearance of plot symbol:
 - fill is color fill
 
 
-Finding and Changing trellis.par
+Finding and Changing trellis.par - polygons
 ========================================================
 class:small-code
 You can also use grep to find all parameters that control color of polygon:
@@ -250,12 +272,12 @@ You can also use grep to find all parameters that control color of polygon:
 ```{r}
 lapply(newTheme[grep("polygon", names(newTheme))], names)
 ```
-
-Finding and Changing trellis.par
+
+Finding and Changing trellis.par - editing and applying our theme
 ========================================================
 class:small-code
-Change some default paramters:
-```{r, fig.align='center'}
+Change some default parameters:
+```{r, fig.align='center', fig.width=10, fig.height=6}
 newTheme$plot.symbol$pch <- 20
 newTheme$plot.symbol$col <- "#000000"
 newTheme$plot.line$col <- "red"
@@ -268,7 +290,7 @@ Finding and Changing trellis.par example
 ========================================================
 class:small-code
 Now when we call xyplot, it will use black circles and a red line:
-```{r, fig.align='center'}
+```{r, fig.align='center', fig.width=10, fig.height=6}
 plot(carPlot)
 ```
 
@@ -276,43 +298,78 @@ Finding and Changing trellis.par example
 ========================================================
 class:small-code
 But if I wanted to go back (for this plot):
-```{r, fig.align='center'}
+```{r, fig.align='center', fig.width=10, fig.height=6}
 update(carPlot, par.settings=oldTheme)
 ```
 
-Key thoughts for controling appearence in lattice
+Key thoughts for controlling appearance in lattice
 ========================================================
-- appearence is a 'theme' controled by a list of parameters
+- appearance is a 'theme' controlled by a list of parameters
 - current settings obtained by trellis.par.get and/or show.settings()
 - can be manipulated and set with trellis.par.set()
 - set for an individual lattice plot with the par.setting argument.
 
-What does this do for you?
+Want ggplot2 appearance?
 ========================================================
 class:small-code
 Themes can be pre-defined:
-```{r, fig.align='center'}
+```{r, fig.align='center', fig.width=10, fig.height=6}
 update(carPlot, par.settings=ggplot2like())
 ```
 
-What does this do for you?
+Look like an Economist?
 ========================================================
 class:small-code
 Or even for a publication:
-```{r, fig.align='center'}
+```{r, fig.align='center', fig.width=10, fig.height=6}
 update(carPlot, par.settings=theEconomist.theme(with.bg=TRUE), type=c("p","r"))
 ```
 
-What does this do for you?
+There are pre-defined themes for standard devices
 ========================================================
 class:small-code
 Or even for a publication:
-```{r, fig.align='center'}
+```{r, fig.align='center',  fig.width=10, fig.height=6}
 bwtheme <- standard.theme("pdf", color=FALSE)
 bwtheme$plot.symbol$pch <- 20
 update(carPlot, par.settings = bwtheme)
 ```
 
+A CIO Theme (ATSDR-like)
+========================================================
+class:small-code
+Or even for my office:
+```{r, fig.align='center'}
+atsdrCols <- c("#1e5aaf","#76b18f", "#04517d", "#395b44", "#4a1705", "#edad09", "#AFB479" )
+atsdr.theme <-custom.theme(symbol = atsdrCols, fill=atsdrCols,region=c(atsdrCols[2], "white", atsdrCols[1]), reference="#e8e8e8")
+
+#boxplots fix
+atsdr.theme$box.umbrella$lty <- 1
+atsdr.theme$box.rectangle$col <- atsdrCols[1]
+atsdr.theme$box.rectangle$fill <- atsdrCols[7]
+atsdr.theme$box.dot$pch <- "|"
+atsdr.theme$superpose.symbol$pch <- 19
+atsdr.theme$plot.symbol$pch <- 19
+
+#font fix
+atsdr.theme$grid.pars = list(family="serif")
+```
+
+A CIO Theme (ATSDR-like)
+========================================================
+class:small-code
+Or even for my office:
+```{r, fig.align='center', fig.width=10, fig.height=6}
+show.settings(atsdr.theme)
+```
+
+A CIO Theme (ATSDR-like)
+========================================================
+class:small-code
+Or even for my office:
+```{r, fig.align='center', fig.width=10, fig.height=6}
+update(carPlot, par.settings=atsdr.theme)
+```
 
 Example 2: Customized panel function
 ========================================================
