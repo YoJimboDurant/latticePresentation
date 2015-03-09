@@ -27,13 +27,25 @@
 .reveal h1 {
   word-wrap: normal;
   -moz-hyphens: none;
+  
 }
-.title-slide {
- background-image: url(ATSDR_DIVISION.png);
- background-position: center center;
- background-attachment: fixed;
- background-size: contain;
+
+.section .reveal h1,
+.section .reveal p {
+  color: black;
 }
+
+ .section .reveal .state-background {
+  background-image: url(ATSDR_DIVISION.png);
+  background-position: center center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+ 
+}
+
+
+
 
 body {
   background-image: url(CDCLightBlue.png);
