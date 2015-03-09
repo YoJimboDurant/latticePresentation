@@ -1,41 +1,3 @@
-<style>
-.reveal h1, .reveal h2, .reveal h3 {
-word-wrap: normal;
--moz-hyphens: none;
-}
-.small-code pre code {
-font-size: 1em;
-}
-.midcenter {
-position: fixed;
-top: 50%;
-left: 50%;
-}
-.footer {
-color: black; background: #E8E8E8;
-position: fixed; top: 90%;
-text-align:center; width:100%;
-}
-.pinky .reveal .state-background {
-background: #FF69B4;
-}
-.pinky .reveal h1,
-.pinky .reveal h2,
-.pinky .reveal p {
-color: black;
-}
-
-body {
-  background-image: url(CDCLightBlue.png);
-  background-position: center center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
- 
-}
-
-</style>
-
 Introduction to Lattice
 ========================================================
 autosize: false
@@ -43,7 +5,7 @@ transition: rotate
 transition-speed: slow
 James Durant, MSPH CIH<br>
 ATSDR DCHI SSB Exposure Investigations and Data Analysis Team<br>
-![](bok.png)
+![](cover.png)
 <div class="footer" style="margin-top:-50px;background-color:transparent;"
 <SPAN STYLE="font-size:80%;font-weight:bold;">CDC ATSDR R USERS GROUP<br>March 28, 2015</SPAN></div>
 
