@@ -156,7 +156,7 @@ Basics of a lattice plot call - interactions (plus key)
 class:small-code
 Compare across (|) with grouping variable
 ```{r, fig.align='center', fig.width=10, fig.height=6}
-xyplot(mpg~ hp | factor(cyl), group=factor(gear), data = mtcars, auto.key=list(space="right", title="Gears"))
+(carPlot.key = xyplot(mpg~ hp | factor(cyl), group=factor(gear), data = mtcars, auto.key=list(space="right", title="Gears", border=TRUE)))
 ```
 
 
@@ -291,7 +291,7 @@ update(carPlot, par.settings=theEconomist.theme(with.bg=TRUE), type=c("p","r"))
 There are pre-defined themes for standard devices
 ========================================================
 class:small-code
-Or even for a publication:
+each graphics device has a theme that you can access:
 ```{r, fig.align='center',  fig.width=10, fig.height=6}
 bwtheme <- standard.theme("pdf", color=FALSE)
 bwtheme$plot.symbol$pch <- 20
@@ -303,7 +303,7 @@ A CIO Theme (ATSDR-like)
 class:small-code
 Or even for my office:
 ```{r, fig.align='center'}
-atsdrCols <- c("#1e5aaf","#76b18f", "#04517d", "#395b44", "#4a1705", "#edad09", "#AFB479" )
+atsdrCols <- c("#1e5aaf","#76b18f", "#04517d", "#395b44", "#4a1705", "#edad09", "#adb479" )
 atsdr.theme <-custom.theme(symbol = atsdrCols, fill=atsdrCols,region=c(atsdrCols[2], "white", atsdrCols[1]), reference="#e8e8e8")
 
 #boxplots fix
@@ -311,8 +311,13 @@ atsdr.theme$box.umbrella$lty <- 1
 atsdr.theme$box.rectangle$col <- atsdrCols[1]
 atsdr.theme$box.rectangle$fill <- atsdrCols[7]
 atsdr.theme$box.dot$pch <- "|"
-atsdr.theme$superpose.symbol$pch <- 19
+atsdr.theme$superpose.symbol$pch <- c(16,17,18,19,20)
+atsdr.theme$superpose.symbol$col <- c(atsdrCols[5:7],atsdrCols[1:4])
+atsdr.theme$superpose.line$col <- c(atsdrCols[5:7],atsdrCols[1:4])
 atsdr.theme$plot.symbol$pch <- 19
+atsdr.theme$strip.background$col <- atsdrCols[7:1]
+atsdr.theme$strip.shingle$col <- atsdrCols[1:7]
+
 
 #font fix
 atsdr.theme$grid.pars = list(family="serif")
@@ -331,25 +336,112 @@ A CIO Theme (ATSDR-like)
 class:small-code
 Or even for my office:
 ```{r, fig.align='center', fig.width=10, fig.height=6}
-update(carPlot, par.settings=atsdr.theme)
+update(carPlot.key, par.settings=atsdr.theme)
 ```
+
+
+
+
+Example 1: Two scales on y-axis
+========================================================
+class:small-code
+- We have been given the task of creating a plot of
+ + #cases left y axis
+ + rate of disease on right y-axis
+ + Age groups of cases on x-axis
+ 
+[code](./twoAxis.R)
+
+
+Example 1: Two scales on y-axis (read in the data, set theme)
+========================================================
+class:small-code
+First we read in the data,create the age catagories, and set our theme
+```{r}
+
+library(lattice)
+library(latticeExtra)
+
+p<-read.csv("./sampleData.csv")
+head(p)
+
+#Age categories for x-axis.
+name1<-c("","0-4","5-9","10-14","15-19",
+         "20-24","25-29","30-34","35-39","40-44","45-49","50-54","55-59",
+         "60-64","65-69","70-74","75-79","80-84","85+")
+
+p$`Age Catagory` <- factor(name1, levels=name1)
+
+#create a theme from pdf device
+bwtheme <- standard.theme("pdf", color=FALSE)
+```
+ 
+Example 1: Two scales on y-axis (plot counts data)
+========================================================
+class:small-code
+next create a trellis object from barplot for count data
+```{r}
+dCountPlot <-   barchart(deaths~`Age Catagory`, data=p, ylab="Deaths(n)\n", 
+           par.settings = bwtheme, axis = axis.grid, 
+           key=list(
+             x=.05,y=.9, text=list(lab="Deaths"),
+             rectangles = list(col="dark grey"),
+             text=list(lab="Death Rate"), 
+             lines=list( pch=19, col="black", type="o", lty=2, 
+                         cex=0.5, lwd=1),
+             transparent=T,border=F,rep=F
+           ),
+           ylim=c(0,13000)    # note y1 and y2 1000:1
+  )
+```
+
+Example 1: Two scales on y-axis (plot rate data)
+========================================================
+class:small-code
+next create a trellis object from xylot for rate data
+```{r, eval=FALSE}
+dRatePlot <- xyplot(rate ~ `Age Catagory`, data=p, 
+                    type="o", 
+                    pch=16, 
+                    lend=2, 
+                    cex=1, 
+                    ylab="Deaths per 100,000",
+                    par.settings = bwtheme, 
+                    axis = axis.grid, 
+                    ylim=c(0,13)
+                    )
+  )
+```
+
+
+Example 1: Two scales on y-axis (final plot)
+========================================================
+class:small-code
+next create a trellis object from barplot
+```{r, eval=FALSE}
+doubleYScale(dCountPlot, dRatePlot, add.ylab2 = TRUE)
+```
+
+```{r, echo = FALSE, fig.width=10, fig.height=6, fig.align='center' }
+source("./twoAxis.R")
+```
+
+
 
 Example 2: Customized panel function
 ========================================================
 class:small-code
 We use the attributes of a lattice xyplot to help create a arrows using panel.arrows:
-[code](./testXYPLOT.R)
+[code](./xyArrows.R)
 ```{r, echo=FALSE, fig.align='center'}
 require(latticeExtra)
 require(openair)
 library(circular)
 
 Sys.setenv(TZ='GMT')
-
-testData <- selectByDate(mydata, start="1/7/1999", end="2/7/1999")
+testData <- selectByDate(mydata, start="1/7/1999", end="2/7/1999") # select 2 days of data
 
 plt <- xyplot(pm10~date, data=testData, type="g", xlab="Date", ylab=quickText("pm10 (ug.m-3)"))
-
 deltaX <- as.numeric(plt$x.limits[[2]]) - as.numeric(plt$x.limits[[1]])
 deltaY <- as.numeric(plt$y.limits[[2]]) - as.numeric(plt$y.limits[[1]])
 
@@ -360,7 +452,6 @@ length = 0.05
 
 #scale wind speed
 scaleWS <- testData$ws/max(testData$ws, na.rm=TRUE)
-
 testData$u <- sin(rad(testData$wd))  * factor * scaleWS
 testData$v <- cos(rad(testData$wd)) *  factor * ratio/pltRatio * scaleWS
 
@@ -375,4 +466,50 @@ plt2 <- xyplot(pm10~date, data=testData, x0=testData$date + testData$u ,y0=testD
                main=quickText("Winds by Date and PM10")
                )
 plt2
+```
 
+
+Example 2: Customized panel function (part 1: data setup)
+========================================================
+class:small-code
+Load and modify the data
+[code](./xyArrows.R)
+```{r,  fig.align='center', eval=FALSE}
+require(latticeExtra)
+require(openair)
+library(circular)
+
+Sys.setenv(TZ='GMT')
+testData <- selectByDate(mydata, start="1/7/1999", end="2/7/1999") # select 2 days of data
+
+plt <- xyplot(pm10~date, data=testData, type="g", xlab="Date", ylab=quickText("pm10 (ug.m-3)"))
+deltaX <- as.numeric(plt$x.limits[[2]]) - as.numeric(plt$x.limits[[1]])
+deltaY <- as.numeric(plt$x.limits[[2]]) - as.numeric(plt$x.limits[[1]])
+
+pltRatio <- plt$aspect.ratio
+ratio <- deltaY/deltaX
+factor = 3600
+length = 0.05
+
+#scale wind speed so 1 day length = max wind speed
+scaleWS <- testData$ws/max(testData$ws, na.rm=TRUE)
+testData$u <- sin(rad(testData$wd))  * factor * scaleWS
+testData$v <- cos(rad(testData$wd)) *  factor * ratio/pltRatio * scaleWS
+```
+
+Example 2: Customized panel function (part 2: do plot)
+========================================================
+class:small-code
+Use xyplot, panel.arrows, panel.grid to accomplish plot
+```{r,  fig.align='center', eval=FALSE}
+plt2 <- xyplot(pm10~date, data=testData, x0=testData$date + testData$u ,y0=testData$pm10 + testData$v, x1 = testData$date - testData$u,
+               y1= testData$pm10 - testData$v, length=length, labels=testData$wd,
+               panel=function(...) {
+                 panel.arrows(...)
+                 panel.grid(...)
+                 }                 },
+               xlab="Date", ylab=quickText("PM10 (ug.m-3)"),
+               main=quickText("Winds by Date and PM10")
+               )
+plt2
+```
