@@ -36,7 +36,7 @@ Lattice consists of:
   + panel functions 
   + page functions
   + key functions
-- a list of lists parameters that control appearance of plots
+- lists of lists parameters that control appearance of plots
   + par.settings - can be set up by user external to function or changed by graphic
   + scales - control appearance of scales
 
@@ -115,12 +115,12 @@ print(xtable(table1), type="html", include.rownames=FALSE, html.table.attributes
 Basics of a lattice plot call
 ========================================================
 class:small 
-- a formula
+- a formula and data
 - a panel function (can be left at default or changed)
-- scales (as list)
-- key (as list) produce legend or key
-- par.settings (as list) control appearance settings
-- par.strip.text (as list) text inside shingle
+- scales (optional - as list)
+- key (optional as list) produce legend or key
+- par.settings (optional as list) control appearance settings
+- par.strip.text (optional as list) text inside shingle
 - Additional arguments or functions
 
 Basics of a lattice plot call - conditioning
@@ -131,7 +131,7 @@ Compare across (|) as factor
 xyplot(mpg~ hp | factor(cyl), data = mtcars, layout=c(3,1))
 ```
 
-Basics of a lattice plot call - conditioning
+Basics of a lattice plot call - conditioning with shingles
 ========================================================
 class:small-code
 Compare across (|) numeric
@@ -140,6 +140,16 @@ data(airquality)
 airquality$Temp <- equal.count(airquality$Temp)
 xyplot(Ozone~Solar.R|Temp, data=airquality)
 ```
+
+
+Basics of a lattice plot call - conditioning with shingles
+========================================================
+class:small-code
+But the danger here is there are overlapping ranges in each panel
+```{r, fig.align='center', fig.width=10, fig.height=6}
+plot(airquality$Temp)
+```
+
 
 
 Basics of a lattice plot call - interactions
