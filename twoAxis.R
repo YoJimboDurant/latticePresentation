@@ -14,7 +14,7 @@ p$`Age Catagory` <- factor(name1, levels=name1)
 bwtheme <- standard.theme("pdf", color=FALSE)
 
 #create a Count barplot
-dCountPlot <-   barchart(deaths~`Age Catagory`, data=p, ylab="Deaths(n)\n", 
+dCountPlot <-   barchart(deaths~`Age Catagory`, data=p, xlab="Age Catagory", ylab="Deaths(n)\n", 
            par.settings = bwtheme, axis = axis.grid, 
            key=list(
              x=.05,y=.9,

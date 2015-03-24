@@ -8,7 +8,9 @@ James Durant, MSPH CIH<br>
 ATSDR DCHI SSB Exposure Investigations and Data Analysis Team<br>
 ![](cover.png)
 <div class="footer" style="margin-top:-50px;background-color:transparent;"
-<SPAN STYLE="font-size:80%;font-weight:bold;">CDC ATSDR R USERS GROUP<br>March 28, 2015</SPAN></div>
+<SPAN STYLE="font-size:80%;font-weight:bold;">CDC ATSDR R USERS GROUP<br>March 26, 2015</SPAN>
+</div>
+
 
 
 
@@ -21,7 +23,31 @@ Why learn lattice?
 - can do some things that are difficult in *ggplot2* (e.g. 3d scatter plots)
 - default appearance can be set ahead of time, and changed
 - returns object which can be manipulated, combined or otherwise changed as needed
-- available in base R 
+- available in base R
+
+Because of it's flexibiliy 
+
+Why learn lattice - example in the package, openair
+========================================================
+
+
+```{r, echo=FALSE}
+library(openair)
+library(gridExtra)
+wR <- windRose(mydata, main="A Wind Rose")
+```
+***
+```{r, echo=FALSE}
+pA <- polarAnnulus(mydata, main="Polar Annulus")
+```
+
+Why learn lattice - example in the package, openair
+========================================================
+
+- In *openair* both plots (windRose and polarAnnulus) are based on xyplot
+- Package author used a combination of custom panel functions, legend functions to create these graphics.
+- xyplot is a 'scatterplot' function.
+<a href="https://r-forge.r-project.org/scm/?group_id=473">R-Forge Repository For openair</a> 
 
 What we will be covering today
 ========================================================
@@ -29,17 +55,26 @@ What we will be covering today
 - how to modify appearance of lattice plot objects using themes
 - 2 examples of customized plots in lattice
 
-Lattice consists of:
+We will touch on <a href="https://www.stat.auckland.ac.nz/~paul/RG2e/">grid graphics</a>, but it underlies many of the functions in lattice. You can learn about grid at: https://www.stat.auckland.ac.nz/~paul/RG2e/
+
+
+
+Lattice arguments consists of:
 ========================================================
 - high level functions (similar in general to R graphics)
 - functions that are called from within high level functions
   + panel functions 
   + page functions
   + key functions
-- lists of lists parameters that control appearance of plots
+- lists of lists parameters settings that control appearance of plots
   + par.settings - can be set up by user external to function or changed by graphic
   + scales - control appearance of scales
+- Other settings that control labels, titles, layout, etc.
 
+
+Lattice arguments consists of:
+========================================================
+![](drawing.png)
 
 Basic lattice example
 ========================================================
@@ -108,7 +143,9 @@ table1 <- read.csv("Book1.csv")
 print(xtable(table1), type="html", include.rownames=FALSE, html.table.attributes ="border=0")
 ```
 <br><div class="footer" style="background-color:transparent;"
-<SPAN STYLE="font-size:20%;font-weight:bold;">Examples <br><a href="http://lmdvr.r-forge.r-project.org/figures/figures.html">lmdvr.r-forge.r-project.org/figures/figures.html</a></SPAN></div>
+<SPAN STYLE="font-size:20%;font-weight:bold;">
+***
+Examples: <br><a href="http://lmdvr.r-forge.r-project.org/figures/figures.html">lmdvr.r-forge.r-project.org/figures/figures.html</a></SPAN></div>
 
 
                      
@@ -184,7 +221,8 @@ class:small-code
 We can annotate our plot using the page argument with a function.
 ```{r, fig.align='center', fig.width=10, fig.height=6}
 notation.plot <- xyplot(mpg~ hp | factor(cyl), group=factor(gear), data = mtcars, 
-       auto.key=list(space="right", title="Gears", border=TRUE, between.columns=4, cex.title=0.8), 
+       auto.key=list(space="right", title="Gears", 
+                     border=TRUE, between.columns=4, cex.title=0.8), 
        scales=list(alternating=FALSE),
        page=function(n){
          grid:::grid.text("Data Source: Henderson and Velleman (1981), Building multiple regression models interactively. Biometrics, 37, 391–411", x=0.40, y=0.01, default.units="npc", just=c("left","bottom"), gp=grid:::gpar(fontsize=8))
@@ -225,16 +263,15 @@ data.frame(trellis.par.get("plot.symbol"))
 Finding and Changing trellis.par - plot symbols
 ========================================================
 class:small-code
+
 ```{r}
 data.frame(newTheme$plot.symbol) # data.frame is optional - just makes things fit in slide
 ```
+
 There are 6 properties that control the appearance of plot symbol:
-- alpha is transparency [0-1]
-- cex is size
-- col is color
-- font is font set
-- pch is symbol
-- fill is color fill
+- alpha is transparency [0-1] ; cex is size
+- col is color ; font is font set
+- pch is symbol ;  fill is color fill
 
 
 Finding and Changing trellis.par - polygons
@@ -250,14 +287,14 @@ Finding and Changing trellis.par - editing and applying our theme
 ========================================================
 class:small-code
 Change some default parameters:
-```{r, fig.align='center', fig.width=10, fig.height=6}
+```{r, fig.align='right', fig.width=6, fig.height=4}
 newTheme$plot.symbol$pch <- 20
 newTheme$plot.symbol$col <- "#000000"
 newTheme$plot.line$col <- "red"
 trellis.par.set(newTheme)
 show.settings()
 ```
-trellis.par.set changes the default behavior of the lattice graphics.
+<div class = "right">trellis.par.set changes the default behavior of the lattice graphics.</div>
 
 Finding and Changing trellis.par example
 ========================================================
@@ -374,11 +411,19 @@ library(latticeExtra)
 
 p<-read.csv("./sampleData.csv")
 head(p)
+```
+
+Example 1: Two scales on y-axis (read in the data, set theme)
+========================================================
+class:small-code
+First we read in the data,create the age catagories, and set our theme
+```{r}
 
 #Age categories for x-axis.
-name1<-c("","0-4","5-9","10-14","15-19",
-         "20-24","25-29","30-34","35-39","40-44","45-49","50-54","55-59",
-         "60-64","65-69","70-74","75-79","80-84","85+")
+name1<-c("","0-4","5-9","10-14","15-19", "20-24",
+         "25-29","30-34","35-39","40-44","45-49",
+         "50-54","55-59","60-64","65-69","70-74",
+         "75-79","80-84","85+")
 
 p$`Age Catagory` <- factor(name1, levels=name1)
 
@@ -392,14 +437,14 @@ class:small-code
 next create a trellis object from barplot for count data
 ```{r}
 dCountPlot <-   barchart(deaths~`Age Catagory`, data=p, ylab="Deaths(n)\n", 
-           par.settings = bwtheme, axis = axis.grid, 
+           xlab="Age Catagory", par.settings = bwtheme, axis = axis.grid, 
            key=list(
              x=.05,y=.9, text=list(lab="Deaths"),
              rectangles = list(col="dark grey"),
              text=list(lab="Death Rate"), 
              lines=list( pch=19, col="black", type="o", lty=2, 
                          cex=0.5, lwd=1),
-             transparent=T,border=F,rep=F
+             transparent=T,border=F,rep=F, columns=1
            ),
            ylim=c(0,13000)    # note y1 and y2 1000:1
   )
@@ -416,11 +461,12 @@ dRatePlot <- xyplot(rate ~ `Age Catagory`, data=p,
                     lend=2, 
                     cex=1, 
                     ylab="Deaths per 100,000",
+                    xlab="Age Catagory",
                     par.settings = bwtheme, 
                     axis = axis.grid, 
                     ylim=c(0,13)
                     )
-  )
+  
 ```
 
 
@@ -429,7 +475,7 @@ Example 1: Two scales on y-axis (final plot)
 class:small-code
 next create a trellis object from barplot
 ```{r, eval=FALSE}
-doubleYScale(dCountPlot, dRatePlot, add.ylab2 = TRUE)
+doubleYScale(dCountPlot, dRatePlot, add.ylab2 = TRUE, xlab="Age Catagory")
 ```
 
 ```{r, echo = FALSE, fig.width=10, fig.height=6, fig.align='center' }
@@ -492,6 +538,7 @@ library(circular)
 Sys.setenv(TZ='GMT')
 testData <- selectByDate(mydata, start="1/7/1999", end="2/7/1999") # select 2 days of data
 
+#This is where I use trellis to my advantage
 plt <- xyplot(pm10~date, data=testData, type="g", xlab="Date", ylab=quickText("pm10 (ug.m-3)"))
 deltaX <- as.numeric(plt$x.limits[[2]]) - as.numeric(plt$x.limits[[1]])
 deltaY <- as.numeric(plt$x.limits[[2]]) - as.numeric(plt$x.limits[[1]])
@@ -523,3 +570,16 @@ plt2 <- xyplot(pm10~date, data=testData, x0=testData$date + testData$u ,y0=testD
                )
 plt2
 ```
+
+
+Final Key Points
+========================================================
+class:small-code
+- Lattice is based on cascades of functions and lists
+- Output of lattice is trellis object which can be accessed directly used in your functions
+- Look and feel can be controlled by themes
+- Themes can be made universal by trellis.par.set()
+
+
+
+

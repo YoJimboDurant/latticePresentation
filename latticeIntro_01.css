@@ -30,6 +30,16 @@
   
 }
 
+div.right {
+                position: fixed;
+                float: left;
+                text-align: left;
+                width: 425px;
+                top: 50%;
+}
+
+
+
 .section .reveal h1,
 .section .reveal p {
   color: black;
